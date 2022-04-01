@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using MassTransit;
 
-namespace Exchanges;
+namespace Fanout;
+
+public record SubmitOrder(string Name);
 
 public class SubmitOrderConsumer : IConsumer<SubmitOrder>
 {

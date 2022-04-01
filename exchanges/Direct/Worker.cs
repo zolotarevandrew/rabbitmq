@@ -5,7 +5,7 @@ using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Exchanges
+namespace Direct
 {
     public class Worker : BackgroundService
     {
@@ -24,7 +24,7 @@ namespace Exchanges
                 
                 await scope.ServiceProvider
                     .GetRequiredService<IPublishEndpoint>()
-                    .Publish(new SubmitOrder(Guid.NewGuid().ToString()), stoppingToken);
+                    .Publish(new ClientCreated("OLD", Guid.NewGuid().ToString()), stoppingToken);
                 
                 await Task.Delay(1500, stoppingToken);
             }
