@@ -13,7 +13,37 @@ using RabbitMq;
 
 class Program
 {
+    //Tbd - local random exchange
+    //Tbd - exchange to exchange bindings
+    //Tbd - https://www.rabbitmq.com/docs/sender-selected
+    
     static async Task Main(string[] args)
+    {
+        await RunConsumerProducer(args);
+    }
+
+    public static async Task RunRpcServer()
+    {
+        await RpcServer.Start();
+    }
+
+    public static async Task RunRpcClient()
+    {
+        Console.WriteLine("RPC Client");
+        string n = "30";
+        
+        await using var rpcClient = new RpcClient();
+        await rpcClient.StartAsync();
+
+        Console.WriteLine(" [x] Requesting fib({0})", n);
+        var response = await rpcClient.CallAsync(n);
+        Console.WriteLine(" [.] Got '{0}'", response);
+
+        Console.WriteLine(" Press [enter] to exit.");
+        Console.ReadLine();
+    }
+
+    private static async Task RunConsumerProducer(string[] args)
     {
         Console.Write("Enter mode (publisher / consumer): ");
         var mode = Console.ReadLine()?.Trim().ToLower();
@@ -24,10 +54,10 @@ class Program
                 switch (mode)
                 {
                     case "p":
-                        services.AddHostedService<Publisher>();
+                        services.AddHostedService<PublisherAlternateExchange>();
                         break;
                     case "c":
-                        services.AddHostedService<Consumer>();
+                        services.AddHostedService<ConsumerAlternateExchange>();
                         break;
                     default:
                         Console.WriteLine("Invalid mode. Use 'publisher' or 'consumer'.");

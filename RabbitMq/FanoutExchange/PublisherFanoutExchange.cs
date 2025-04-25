@@ -4,11 +4,11 @@ using RabbitMQ.Client;
 
 namespace RabbitMq;
 
-public class Publisher : BackgroundService
+public class PublisherFanoutExchange : BackgroundService
 {
     private readonly ConnectionFactory _factory;
 
-    public Publisher()
+    public PublisherFanoutExchange()
     {
         _factory = new ConnectionFactory
         {
@@ -21,13 +21,11 @@ public class Publisher : BackgroundService
     {
         await using var connection = await _factory.CreateConnectionAsync(stoppingToken);
         await using var channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken);
-
-        await channel.QueueDeclareAsync(
-            queue: "task_queue",
-            durable: true,
-            exclusive: false,
-            autoDelete: false,
-            arguments: null, cancellationToken: stoppingToken);
+        
+        await channel.ExchangeDeclareAsync(
+            exchange: "logs", 
+            type: ExchangeType.Fanout, 
+            cancellationToken: stoppingToken);
 
         int count = 0;
 
@@ -42,8 +40,8 @@ public class Publisher : BackgroundService
             };
 
             await channel.BasicPublishAsync(
-                exchange: "",
-                routingKey: "task_queue",
+                exchange: "logs", 
+                routingKey: string.Empty,
                 mandatory: true,
                 basicProperties: properties,
                 body: body, cancellationToken: stoppingToken);
