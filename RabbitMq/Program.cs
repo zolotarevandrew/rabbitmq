@@ -8,18 +8,13 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using RabbitMq;
 
 class Program
 {
-    //Tbd - local random exchange
-    //Tbd - exchange to exchange bindings
-    //Tbd - https://www.rabbitmq.com/docs/sender-selected
-    
+
     static async Task Main(string[] args)
     {
-        await RunConsumerProducer(args);
     }
 
     public static async Task RunRpcServer()
