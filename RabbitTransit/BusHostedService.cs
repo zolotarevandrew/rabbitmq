@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Hosting;
 using RabbitTransit.Direct;
+using RabbitTransit.Topic;
 
 namespace RabbitTransit;
 
@@ -18,10 +19,24 @@ public class BusHostedService : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         await _busControl.StartAsync(cancellationToken);
-        
-        await _publishEndpoint.Publish(new DirectMessage
+        await PublishTopic( cancellationToken );
+    }
+
+    private async Task PublishDirect( CancellationToken cancellationToken )
+    {
+        await _publishEndpoint.Publish(new TopicMessage
         {
-            Text = "Hello, world!"
+            Key = "important",
+            Text = "test"
+        }, cancellationToken );
+    }
+    
+    private async Task PublishTopic( CancellationToken cancellationToken )
+    {
+        await _publishEndpoint.Publish(new TopicMessage
+        {
+            Key = "my.important",
+            Text = "test"
         }, cancellationToken );
     }
 

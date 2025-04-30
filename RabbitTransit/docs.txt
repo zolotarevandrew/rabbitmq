@@ -1,3 +1,29 @@
 1) AddMassTransit
 
 ServiceCollectionBusConfigurator
+
+
+
+План
+1) ExchangeType: direct, fanout, topic, headers
+2) routing key
+3) message TTL
+4) publisher confirms
+5) basic.recover, requeue
+
+6) 
+cfg.Publish<T>() — exchange type, name
+ReceiveEndpoint — очередь, биндинги, prefetch
+e.Bind(...) — ручной биндинг к exchange		
+e.ConfigureConsumer<T>(...)	
+e.Consumer(...) 
+e.ConcurrentMessageLimit / e.PrefetchCount
+
+7) UseMessageRetry(...)
+
+Dead-letter queue (*_error) обработка
+
+8) Различия особенности
+IPublishEndpoint	
+ISendEndpointProvider
+
