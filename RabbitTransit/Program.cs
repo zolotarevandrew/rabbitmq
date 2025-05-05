@@ -15,6 +15,7 @@ var host = Host.CreateDefaultBuilder(args)
         {
             x.AddConsumer<DirectConsumer>();
             x.AddConsumer<TopicConsumer>();
+            x.AddConsumer<HeadersConsumer>();
             
             x.UsingRabbitMq((context, cfg) =>
             {
@@ -26,6 +27,7 @@ var host = Host.CreateDefaultBuilder(args)
 
                 cfg.ConfigureDirectConsumer( context );
                 cfg.ConfigureTopicConsumer( context );
+                cfg.ConfigureHeadersConsumer( context );
             });
         });
         

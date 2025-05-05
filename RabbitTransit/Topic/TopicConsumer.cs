@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using MassTransit.RabbitMqTransport;
+using MassTransit.RabbitMqTransport.Topology;
 using RabbitMQ.Client;
 
 namespace RabbitTransit.Topic;
@@ -10,6 +11,14 @@ public class TopicConsumer : IConsumer<TopicMessage>
     {
         Console.WriteLine($"Topic Received: {context.Message.Text}");
         return Task.CompletedTask;
+    }
+}
+
+public class TopicRoutingKeyFormatter : IMessageRoutingKeyFormatter<TopicMessage>
+{
+    public string FormatRoutingKey( RabbitMqSendContext<TopicMessage> context )
+    {
+        return context.Message.Key;
     }
 }
 
@@ -24,7 +33,8 @@ public static class TopicExtensions
                 
         cfg.Send<TopicMessage>(dd =>
         {
-            dd.UseRoutingKeyFormatter( cc => cc.Message.Key );
+            //dd.UseRoutingKeyFormatter( cc => cc.Message.Key );
+            dd.UseRoutingKeyFormatter( new TopicRoutingKeyFormatter( ) );
         });
 
         cfg.Publish<TopicMessage>(xx =>

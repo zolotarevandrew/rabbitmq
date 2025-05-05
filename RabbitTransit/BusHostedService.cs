@@ -19,15 +19,30 @@ public class BusHostedService : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         await _busControl.StartAsync(cancellationToken);
-        await PublishTopic( cancellationToken );
+        //await PublishDirect( cancellationToken );
+    }
+    
+    private async Task PublishHeaders( CancellationToken cancellationToken )
+    {
+        await _publishEndpoint.Publish(new HeadersMessage
+        {
+            Text = "test1"
+        }, context =>
+        {
+            context.Headers.Set("type", "important");
+        }, cancellationToken );
     }
 
     private async Task PublishDirect( CancellationToken cancellationToken )
     {
-        await _publishEndpoint.Publish(new TopicMessage
+        await _publishEndpoint.Publish(new DirectMessage
         {
             Key = "important",
-            Text = "test"
+            Text = "test",
+            Id = Guid.NewGuid( ).ToString( ),
+        }, context =>
+        {
+            context.TimeToLive = TimeSpan.FromSeconds( 20 );
         }, cancellationToken );
     }
     
