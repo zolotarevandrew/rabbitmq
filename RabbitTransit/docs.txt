@@ -10,7 +10,7 @@ e.Bind(...) — ручной биндинг к exchange	+
 e.ConfigureConsumer<T>(...)	 + 
 e.Consumer(...)  + 
 e.PrefetchCount +
-e.ConcurrentMessageLimit  
+e.ConcurrentMessageLimit + - реализовано через SemaphoreSlim (RabbitMqBasicConsumer)
 
 7) UseMessageRetry(...) 
 RetryFilter<TContext> - ретрай в памяти
